@@ -1,0 +1,17 @@
+{% extends 'navbar.html' %}
+{% block content %}
+
+    <br>
+    <h1 class="display-4">Recipes of the day</h1>
+    <br>
+    <p class="lead">🥰 This recipe list is compiled specifically for you!</p>
+    <p class="lead">Every day it will be updated according to your taste preferences. Rate, browse recipes and replenish your favorites to make recommendations even more accurate.</p>
+    {% for recipe in recipes %}
+        <a href="{% url 'doc_flow:view_recipe' recipe.id %}" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+            {{ recipe.title }}
+            <span class="badge badge-primary badge-pill">{{ recipe.mean_rating }}</span>
+        </a>
+    {% endfor %}
+    <br>
+
+{% endblock %}

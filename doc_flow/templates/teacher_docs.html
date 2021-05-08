@@ -1,0 +1,39 @@
+{% extends 'navbar.html' %}
+{% block content %}
+
+    <div class="tab-content">
+        <br>
+        <h1 class="display-4">Документы студентов</h1>
+        <br>
+
+        <div class="accordion" id="accordionExample">
+            {% for subject in subject_docs %}
+                <div class="card">
+                    <div class="card-header" id="heading{{ subject.subject.id }}">
+                        <a class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ subject.subject.id }}" aria-expanded="true" aria-controls="collapse{{ subject.subject.id }}">
+                            <div class="lead">{{ subject.subject.title }}</div>
+                        </a>
+                    </div>
+
+                    <div id="collapse{{ subject.subject.id }}" class="collapse" aria-labelledby="heading{{ subject.subject.id }}" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="tab-pane active" id="name_search" role="tabpanel" aria-labelledby="name_tab">
+                                <div class="list-group">
+                                    {% for document in subject.documents %}
+                                        <a href="{% url 'doc_flow:file_download' document.id %}" target="_blank" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                            {{ document.title }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+
+    </div>
+
+
+{% endblock %}

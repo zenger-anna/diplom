@@ -1,0 +1,28 @@
+{% extends 'navbar.html' %}
+{% block content %}
+
+    <div class="tab-content">
+        <br>
+        <h1 class="display-4">Мои документы</h1>
+        <br>
+        <div class="tab-pane active" id="name_search" role="tabpanel" aria-labelledby="name_tab">
+            <div class="list-group">
+                {% for document in documents %}
+                    <a href="{% url 'doc_flow:file_download' document.id %}" target="_blank" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                        {{ document.title }}
+                    </a>
+                {% endfor %}
+                <br>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $('#search_tab a').on('click', function (e) {
+            e.preventDefault()
+            $(this).tab('show')
+        })
+    </script>
+
+{% endblock %}

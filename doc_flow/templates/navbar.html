@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #BCB2D4;">
+
+    {% load static %}
+    <img src="{% static "eyeglasses.svg" %}" width="35" height="35" class="d-inline-block align-top mr-sm-2" alt="" loading="lazy">
+{#  <a class="navbar-brand" href="{% url 'doc_flow:search' %}">#}
+{#      ZENGER | COOK#}
+{#  </a>#}
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+              <a class="nav-link" href="{% url 'doc_flow:about' %}">О системе</a>
+          </li>
+          {% if user.is_authenticated %}
+              {% if user_type == "student" %}
+                  <li class="nav-item active">
+                      <div class="nav-item active">
+                          <a class="nav-link text-dark" href="{% url 'doc_flow:student_docs' %}">Мои документы</a>
+                      </div>
+                  </li>
+                  <li class="nav-item active">
+                      <div class="nav-item active">
+                          <a class="nav-link text-dark" href="{% url 'doc_flow:add_doc' %}">Загрузить документ</a>
+                      </div>
+                  </li>
+              {% elif user_type == "teacher" %}
+                  <li class="nav-item active">
+                      <div class="nav-item active">
+                          <a class="nav-link text-dark" href="{% url 'doc_flow:teacher_docs' %}">Документы</a>
+                      </div>
+                  </li>
+              {% endif %}
+          {% endif %}
+{#          <li class="nav-item active">#}
+{#              <a class="nav-link" href="{% url 'doc_flow:search' %}">Search</a>#}
+{#          </li>#}
+      </ul>
+  {% if user.is_authenticated %}
+      <div class="btn-group" role="group">
+          <form action="{% url 'doc_flow:log_in' %}" method="get">
+              <button type="action" class="btn btn-outline-dark mr-sm-2" name="log_out_nav_but">Выход</button>
+          </form>
+      </div>
+  {% else %}
+      <form action="{% url 'doc_flow:log_in' %}" method="get">
+          <button type="action" class="btn btn-outline-dark my-10 my-sm-0" name="log_in_nav_but">Вход</button>
+      </form>
+  {% endif %}
+  </div>
+</nav>
+
+
+{% endblock %}
