@@ -77,7 +77,6 @@ def view_student_subjects(request):
 
 def view_file_download(request, document_id):
     path = Document.objects.get(id=document_id).document.path
-    print(path)
     file_path = os.path.join(settings.MEDIA_ROOT, path)
     if os.path.exists(file_path):
         with open(file_path, 'rb') as fh:

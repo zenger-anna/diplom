@@ -27,7 +27,7 @@ class Subject(models.Model):
     semester = models.IntegerField()
 
     def __str__(self):
-        return ' - '.join([str(self.title), str(self.teacher), str(self.semester)])
+        return ' - '.join([str(self.title)])
 
 
 class Document(models.Model):
