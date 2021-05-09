@@ -19,4 +19,4 @@ class UserForm(forms.ModelForm):
 class DocumentForm(forms.ModelForm):
     class Meta:
         model = Document
-        fields = ['user', 'title', 'document', 'subject']
+        fields = ['user', 'title', 'document', 'subject', 'doc_type']

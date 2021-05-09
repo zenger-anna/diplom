@@ -35,6 +35,7 @@ class Document(models.Model):
     subject = models.ForeignKey("Subject", on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=200, unique=False)
     document = models.FileField(upload_to='docs/')
+    doc_type = models.CharField(max_length=7, unique=False)
 
     def __str__(self):
         return ' - '.join([str(self.user), str(self.title)])

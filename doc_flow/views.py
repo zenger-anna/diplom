@@ -50,19 +50,29 @@ def view_about(request):
     return render(request, 'about.html', context={'user_type': get_user_type(request.user)})
 
 
-def view_student_documents(request):
+def view_my_documents(request):
     documents = Document.objects.filter(user=request.user)
-    return render(request, 'student_docs.html', context={'documents': documents, 'user_type': get_user_type(request.user)})
+    return render(request, 'my_docs.html', context={'documents': documents, 'user_type': get_user_type(request.user)})
 
 
-def view_teacher_documents(request):
+def view_student_docs_for_teacher(request):
     subject_docs = []
     subjects = Subject.objects.filter(teacher=request.user.teacher)
     for subject in subjects:
-        documents = Document.objects.filter(subject=subject)
+        documents = Document.objects.filter(subject=subject, doc_type='student')
         sub_docs = SubjectDocs(subject, documents)
         subject_docs.append(sub_docs)
-    return render(request, 'teacher_docs.html', context={'subject_docs': subject_docs, 'user_type': get_user_type(request.user)})
+    return render(request, 'subject_documents.html', context={'title': 'Документы студентов', 'subject_docs': subject_docs, 'user_type': get_user_type(request.user)})
+
+
+def view_student_subjects(request):
+    subject_docs = []
+    subjects = Subject.objects.filter(semester=request.user.student.semester)
+    for subject in subjects:
+        documents = Document.objects.filter(subject=subject, doc_type='teacher')
+        sub_docs = SubjectDocs(subject, documents)
+        subject_docs.append(sub_docs)
+    return render(request, 'subject_documents.html', context={'title': 'Документы дисциплин', 'subject_docs': subject_docs, 'user_type': get_user_type(request.user)})
 
 
 def view_file_download(request, document_id):
@@ -83,13 +93,18 @@ class AddDoc(View):
     def get(self, request):
         form = DocumentForm()
         choices = form.fields['subject'].queryset
-        filtered_choices = choices.filter(semester=request.user.student.semester)
+        current_user = get_user_type(request.user)
+        if current_user == 'student':
+            filtered_choices = choices.filter(semester=request.user.student.semester)
+        else:
+            filtered_choices = choices.filter(teacher=request.user.teacher)
         form.fields['subject'].queryset = filtered_choices
         return render(request, 'add_doc.html', context={'form': form, 'add_doc_error': False, 'user_type': get_user_type(request.user)})
 
     def post(self, request):
         post_doc = request.POST.copy()
         post_doc.__setitem__('user', request.user.id)
+        post_doc.__setitem__('doc_type', get_user_type(request.user))
         bound_form_doc = DocumentForm(post_doc, request.FILES)
         if bound_form_doc.is_valid():
             _ = bound_form_doc.save()
